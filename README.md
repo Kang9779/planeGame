@@ -1,5 +1,5 @@
 ## planeGame
-利用python结合pygame库实现飞机大战游戏
+- 利用python结合pygame库实现飞机大战游戏
 
 ## 运行说明
 - 下载文件后直接运行 python plane_main.py 即可
@@ -10,4 +10,4 @@
 - images 使用到的图片素材
 
 
-
+AUTHOR 20191123
