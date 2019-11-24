@@ -4,6 +4,7 @@ import pygame
 SCREEN_RECT = pygame.Rect(0, 0, 480, 700)  # 屏幕大小
 FRAME_PER_SEC = 60  # 刷新的帧率
 CREATE_ENEMY_EVENT = pygame.USEREVENT  # 创建敌机的定时器常量
+HERO_FIRE_EVENT = pygame.USEREVENT + 1  # 英雄发射子弹事件
 
 
 class GameSprite(pygame.sprite.Sprite):
@@ -67,6 +68,9 @@ class Hero(GameSprite):
         self.rect.centerx = SCREEN_RECT.centerx
         self.rect.bottom = SCREEN_RECT.bottom - 120
 
+        # 创建子弹类对象
+        self.bullets = pygame.sprite.Group()
+
     def update(self):
         # 英雄在水平上移动
         self.rect.x += self.speed
@@ -76,7 +80,29 @@ class Hero(GameSprite):
         elif self.rect.right > SCREEN_RECT.right:
             self.rect.right = SCREEN_RECT.right
 
+    def fire(self):
+        # 创建子弹类，一连发三个
+        for i in (0, 1, 2):
+            bullet = Bullet()
+            # 设置子弹位置
+            bullet.rect.bottom = self.rect.y - i*20
+            bullet.rect.centerx = self.rect.centerx
+            self.bullets.add(bullet)
+
 
 class Bullet(GameSprite):
     '''子弹类'''
-    pass
+
+    def __init__(self):
+        # 调用父类方法，设置子弹图片，设置初始速度
+        super().__init__("./images/bullet1.png", speed=-2)
+
+    def update(self):
+        # 调用父类方法，子弹沿垂直方向飞行
+        super().update()
+        # 判断子弹飞出屏幕
+        if self.rect.bottom < 0:
+            self.kill()
+
+    def __del__(self):
+        print("子弹被销毁...")
