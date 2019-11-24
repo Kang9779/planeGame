@@ -2,8 +2,8 @@
 - pygame and python 
 
 ## 运行说明
-- 1. pip -install pygame
-- 2. python plane_main.py
+- 1)pip -install pygame
+- 2)python plane_main.py
 
 ## 文件说明
 - plane_main.py：项目运行主文件
