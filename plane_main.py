@@ -6,13 +6,13 @@ class PlaneGame(object):
     '''飞机大战主游戏'''
 
     def __init__(self):
-        print("游戏初始化")
         self.screen = pygame.display.set_mode(SCREEN_RECT.size)  # 1.创建游戏主窗口
         self.clock = pygame.time.Clock()  # 2.创建游戏的时钟
         self.__create_sprites()
 
         # 设置定时器事件 1秒
-        pygame.time.set_timer(CREATE_ENEMY_EVENT, 1000)
+        pygame.time.set_timer(CREATE_ENEMY_EVENT, 1000) #创建敌机
+        pygame.time.set_timer(HERO_FIRE_EVENT,500)
 
     def __create_sprites(self):
         # 创建背景精灵和精灵组
@@ -47,6 +47,8 @@ class PlaneGame(object):
                 self.enemy_group.add(enemy)
             # elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
             #     print("向右移动!")
+            elif event.type == HERO_FIRE_EVENT:
+                self.hero.fire()
         # 使用键盘提供的方法获取键盘按键 可以持续按下
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_RIGHT]:
@@ -55,9 +57,15 @@ class PlaneGame(object):
             self.hero.speed = -2
         else:
             self.hero.speed = 0
-
+    #碰撞检测
     def __check_collide(self):
-        pass
+        #子弹与敌机的碰撞检测
+        pygame.sprite.groupcollide(self.hero.bullets,self.enemy_group,True,True)
+        # 敌机与英雄的碰撞检测
+        enemys = pygame.sprite.spritecollide(self.hero,self.enemy_group,True)
+        if len(enemys):
+            self.hero.kill()
+            PlaneGame.__game_over()
 
     def __update_sprites(self):
         self.back_group.update()
@@ -68,6 +76,9 @@ class PlaneGame(object):
 
         self.hero_group.update()
         self.hero_group.draw(self.screen)
+
+        self.hero.bullets.update()
+        self.hero.bullets.draw(self.screen)
 
     @staticmethod
     def __game_over():
